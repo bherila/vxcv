@@ -1,0 +1,60 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: deploy-main
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04-arm
+    environment: prod
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check site files
+        run: |
+          test -f public/index.html
+          test -f public/.htaccess
+          grep -q 'Welcome' public/index.html
+
+      - name: Configure SSH
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ secrets.SSH_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      # The docroot holds files the host manages (ACME challenges, the PHP error log);
+      # --delete must leave those alone.
+      - name: Deploy with rsync
+        run: |
+          rsync -rlptv --delete --chmod=D755,F644 \
+            --exclude='.well-known' \
+            --exclude='error_log' \
+            -e "ssh -o StrictHostKeyChecking=yes -o ServerAliveInterval=15 -o ServerAliveCountMax=4" \
+            public/ \
+            "${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:public_html/"
+
+      - name: Verify production response
+        run: |
+          curl --fail --silent --show-error --location \
+            --retry 10 --retry-delay 5 --retry-connrefused \
+            --max-time 30 https://vxcv.com/ > /tmp/index.html
+          # Not `! grep`: under bash -e a negated command never fails the step.
+          if grep -q 'Index of /' /tmp/index.html; then
+            echo '::error::Production serves a directory listing instead of the site.'
+            exit 1
+          fi
+          grep -q 'Welcome' /tmp/index.html

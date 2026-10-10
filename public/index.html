@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>vxcv</title>
+  <meta name="description" content="vxcv.com — nothing to see here for now. Come back again soon.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#F4F5F7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0B0D12" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="vxcv">
+  <meta property="og:description" content="Nothing to see here for now. Come back again soon.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://vxcv.com/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <script src="/theme.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&family=Space+Mono&display=swap">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <!-- Tile field: v x c repeating, each row shifted one letter, so letters run on diagonals and no two v's touch. -->
+  <svg class="tiles" aria-hidden="true" focusable="false">
+    <defs>
+      <pattern id="tile-pattern" width="216" height="216" patternUnits="userSpaceOnUse">
+        <g class="tile"><rect x="6" y="6" width="60" height="60" rx="14"/><text x="36" y="36">v</text></g>
+        <g class="tile"><rect x="78" y="6" width="60" height="60" rx="14"/><text x="108" y="36">x</text></g>
+        <g class="tile"><rect x="150" y="6" width="60" height="60" rx="14"/><text x="180" y="36">c</text></g>
+        <g class="tile"><rect x="6" y="78" width="60" height="60" rx="14"/><text x="36" y="108">x</text></g>
+        <g class="tile"><rect x="78" y="78" width="60" height="60" rx="14"/><text x="108" y="108">c</text></g>
+        <g class="tile"><rect x="150" y="78" width="60" height="60" rx="14"/><text x="180" y="108">v</text></g>
+        <g class="tile"><rect x="6" y="150" width="60" height="60" rx="14"/><text x="36" y="180">c</text></g>
+        <g class="tile"><rect x="78" y="150" width="60" height="60" rx="14"/><text x="108" y="180">v</text></g>
+        <g class="tile"><rect x="150" y="150" width="60" height="60" rx="14"/><text x="180" y="180">x</text></g>
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#tile-pattern)"/>
+  </svg>
+  <div class="lit-layer" aria-hidden="true"></div>
+
+  <div class="theme-switch" role="group" aria-label="Color theme">
+    <button type="button" data-theme-choice="system" aria-label="Use system theme" title="System">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+    </button>
+    <button type="button" data-theme-choice="light" aria-label="Use light theme" title="Light">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+    <button type="button" data-theme-choice="dark" aria-label="Use dark theme" title="Dark">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+    </button>
+  </div>
+
+  <main class="card">
+    <h1 class="welcome"><span class="sr-only">Welcome</span><span class="welcome-glyphs" aria-hidden="true">Welcome</span></h1>
+    <p class="lede">Nothing to see here for now. Come back again soon.</p>
+    <p class="status" aria-hidden="true">vxcv.com <span class="sep">//</span> standby<span class="cursor"></span></p>
+  </main>
+</body>
+</html>
